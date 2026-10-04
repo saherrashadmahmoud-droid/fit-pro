@@ -12,8 +12,8 @@
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .filter-btn.active { background-color: #10b981; color: #000; }
-        /* خلفية بديلة لو الصورة بتحمل */
-        .img-placeholder { background: #374151; display: flex; align-items: center; justify-content: center; color: #6b7280; }
+        /* خلفية بديلة لو الصور بطيئة */
+        .img-bg { background-color: #374151; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -96,21 +96,32 @@
                 const splitColor = ex.split === 'Push' ? 'bg-blue-900 text-blue-200' : ex.split === 'Pull' ? 'bg-red-900 text-red-200' : 'bg-purple-900 text-purple-200';
                 const eqColor = ex.equipment === 'Barbell' ? 'bg-orange-900 text-orange-200' : ex.equipment === 'Dumbbell' ? 'bg-teal-900 text-teal-200' : ex.equipment === 'Machine' ? 'bg-indigo-900 text-indigo-200' : 'bg-gray-700 text-gray-200';
 
-                // الحل الجذري: 3 سيرفرات بديلة لتخطي الحجب
-                const proxy1 = `https://i0.wp.com/${ex.image.replace('https://', '')}`;
-                const proxy2 = `https://api.allorigins.win/raw?url=${encodeURIComponent(ex.image)}`;
-                const proxy3 = `https://images.weserv.nl/?url=${encodeURIComponent(ex.image)}`;
-                const fallback = `https://dummyimage.com/400x300/1f2937/9ca3af&text=No+Image`;
+                // الحل الجذري: 3 سيرفرات بديلة لتخطي الحجب + إجبار HTTPS
+                const originalUrl = ex.image.replace('https://', '');
+                
+                // 1. سيرفر ووردبريس (الأقوى مع مواقع التمارين)
+                const proxy1 = `https://i0.wp.com/${originalUrl}`;
+                
+                // 2. سيرفر weserv مع إجبار استخدام ssl (عشان يمشي مع المواقع الآمنة)
+                const proxy2 = `https://images.weserv.nl/?url=ssl:${originalUrl}`;
+                
+                // 3. الرابط المباشر (كحل أخير لو المتصفح مش بيحجب)
+                const proxy3 = ex.image;
+                
+                const fallback = `https://placehold.co/400x300/1f2937/9ca3af?text=No+Image`;
 
                 const card = `
                     <div class="card-hover bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg">
-                        <div class="bg-gray-700 h-60 flex items-center justify-center overflow-hidden">
+                        <div class="img-bg h-60 flex items-center justify-center overflow-hidden relative">
+                            <!-- أيقونة بديلة خلف الصورة لو الصورة بتحمل أو فشلت -->
+                            <span class="absolute text-gray-600 text-6xl">🏋️</span>
                             <img src="${proxy1}" 
                                  alt="${ex.name}" 
-                                 class="w-full h-full object-cover" 
+                                 class="relative w-full h-full object-cover" 
                                  loading="lazy"
-                                 data-fallbacks="${proxy2},${proxy3}"
-                                 onerror="handleImgError(this, 0)">
+                                 data-fallback2="${proxy2}"
+                                 data-fallback3="${proxy3}"
+                                 onerror="handleImgError(this)">
                         </div>
                         <div class="p-5">
                             <h3 class="text-xl font-bold text-green-400 mb-2">${ex.name}</h3>
@@ -127,15 +138,17 @@
             });
         }
 
-        // دالة التعامل مع الصور المكسورة وتفعيل البديل
-        window.handleImgError = function(img, index) {
-            const fallbacks = img.dataset.fallbacks ? img.dataset.fallbacks.split(',') : [];
-            if (index < fallbacks.length) {
-                img.src = fallbacks[index];
-                img.onerror = function() { window.handleImgError(img, index + 1); };
+        // دالة التعامل مع الصور المكسورة (Multi-tier Fallback)
+        window.handleImgError = function(img) {
+            if (img.dataset.fallback2) {
+                img.src = img.dataset.fallback2;
+                delete img.dataset.fallback2; // مسح الخطوة اللي فشلت
+            } else if (img.dataset.fallback3) {
+                img.src = img.dataset.fallback3;
+                delete img.dataset.fallback3;
             } else {
-                img.onerror = null;
-                img.src = 'https://dummyimage.com/400x300/1f2937/9ca3af&text=No+Image';
+                // لو كل السيرفرات فشلت، نخفي الصورة ونسيب الأيقونة اللي وراها
+                img.style.display = 'none'; 
             }
         };
 
