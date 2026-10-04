@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
     <title>Ultimate Gym Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
@@ -12,8 +11,7 @@
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .filter-btn.active { background-color: #10b981; color: #000; }
-        /* خلفية بديلة لو الصور بطيئة */
-        .img-bg { background-color: #374151; }
+        .img-bg { background-color: #1f2937; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -29,7 +27,7 @@
     <!-- Hero Section -->
     <section class="text-center py-10 px-4 bg-gradient-to-b from-gray-900 to-gray-800">
         <h2 class="text-3xl md:text-4xl font-bold mb-2">اختر نظامك وتمرن صح</h2>
-        <p class="text-gray-400 text-lg">مكتبة شاملة لكل التمارين بصور متحركة (GIFs) لشرح الأداء الصحيح</p>
+        <p class="text-gray-400 text-lg">مكتبة شاملة لمئات التمارين بصور توضيحية عالية الجودة</p>
     </section>
 
     <!-- Filters -->
@@ -40,48 +38,62 @@
         <button onclick="filterExercises('Pull', this)" class="filter-btn px-4 py-2 rounded-lg bg-red-900 hover:bg-red-800 font-bold transition">بول (Pull)</button>
         <button onclick="filterExercises('Legs', this)" class="filter-btn px-4 py-2 rounded-lg bg-purple-900 hover:bg-purple-800 font-bold transition">ليج (Legs)</button>
         <span class="text-gray-600 self-center">|</span>
-        <button onclick="filterExercises('Barbell', this)" class="filter-btn px-4 py-2 rounded-lg bg-orange-900 hover:bg-orange-800 font-bold transition">بار</button>
-        <button onclick="filterExercises('Dumbbell', this)" class="filter-btn px-4 py-2 rounded-lg bg-teal-900 hover:bg-teal-800 font-bold transition">دمبل</button>
-        <button onclick="filterExercises('Machine', this)" class="filter-btn px-4 py-2 rounded-lg bg-indigo-900 hover:bg-indigo-800 font-bold transition">جهاز</button>
-        <button onclick="filterExercises('Bodyweight', this)" class="filter-btn px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 font-bold transition">وزن جسم</button>
+        <button onclick="filterExercises('barbell', this)" class="filter-btn px-4 py-2 rounded-lg bg-orange-900 hover:bg-orange-800 font-bold transition">بار</button>
+        <button onclick="filterExercises('dumbbell', this)" class="filter-btn px-4 py-2 rounded-lg bg-teal-900 hover:bg-teal-800 font-bold transition">دمبل</button>
+        <button onclick="filterExercises('machine', this)" class="filter-btn px-4 py-2 rounded-lg bg-indigo-900 hover:bg-indigo-800 font-bold transition">جهاز</button>
+        <button onclick="filterExercises('bodyweight', this)" class="filter-btn px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 font-bold transition">وزن جسم</button>
     </div>
 
     <!-- Exercises Grid -->
-    <div id="exercises-container" class="container mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <div id="exercises-container" class="container mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="col-span-full text-center text-gray-500 text-xl flex flex-col items-center">
+            <svg class="animate-spin h-10 w-10 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            جاري تحميل مكتبة التمارين...
+        </div>
+    </div>
 
     <footer class="text-center py-6 text-gray-600 border-t border-gray-800">
         <p>© Ultimate Gym Platform - Designed by The Best Coach & Coder</p>
     </footer>
 
     <script>
-        const exercises = [
-            // =============== نظام البوش (PUSH) ===============
-            { name: "Bench Press (ضغط بنش بالبار)", split: "Push", equipment: "Barbell", muscle: "صدر / ترايسبس / كتف", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Barbell-Bench-Press.gif", desc: "نام على البنش، امسك البار بقبضة أعرض من الكتفين، انزل بالبار لحد الصدر واطلع تاني بدون قفل المفصل بالكامل." },
-            { name: "Incline Dumbbell Press (صدر علوي دمبل)", split: "Push", equipment: "Dumbbell", muscle: "صدر علوي", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Incline-Dumbbell-Press.gif", desc: "اضبط البنش على زاوية 30-45 درجة. امسك الدمبلز واطلعهم لأعلى حتى يقتربوا من بعض، وانزل ببطء لتحت مستوى الصدر." },
-            { name: "Overhead Press (كتف بالبار)", split: "Push", equipment: "Barbell", muscle: "كتف (أمامي وجانبي)", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Barbell-Shoulder-Press.gif", desc: "قف باستقامة، امسك البار بعرض الكتف، ارفع البار لأعلى حتى تستقيم يديك، وانزل لحد مستوى الذقن." },
-            { name: "Dumbbell Shoulder Press (كتف بالدمبل)", split: "Push", equipment: "Dumbbell", muscle: "كتف", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Shoulder-Press.gif", desc: "اقعد على بنش بظهر مستقيم، ابدأ بالدمبلز عند مستوى الأذن، واطلعهم لأعلى حتى تقترب من بعضها." },
-            { name: "Lateral Raises (رفرفة جانبي بالدمبل)", split: "Push", equipment: "Dumbbell", muscle: "كتف جانبي", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Lateral-Raise.gif", desc: "قف وظهرك مستقيم، امسك الدمبلز جنب جسمك، ارفعهم جانباً لحد ما يكونوا بمستوى الكتف، نزل ببطء." },
-            { name: "Triceps Pushdown (ترايسبس بالكابل)", split: "Push", equipment: "Machine", muscle: "ترايسبس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Lat-Pulldown-Triangle-V-Bar.gif", desc: "قف أمام الجهاز، الكوع ثابت جنب جسمك، اسحب البار لأسفل لحد آخر مدى وارجع ببطء." },
-            { name: "Dips (ديبس)", split: "Push", equipment: "Bodyweight", muscle: "صدر سفلي / ترايسبس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Triceps-Dips.gif", desc: "امسك المتوازي، انزل بجسمك لحد ما الكوع يكون 90 درجة، واطلع بتركيز على الترايسبس والصدر." },
+        // تحويل أسماء العضلات في قاعدة البيانات لنظام (Push/Pull/Legs)
+        const muscleMap = {
+            "chest": "Push", "triceps": "Push", "shoulders": "Push",
+            "lats": "Pull", "biceps": "Pull", "traps": "Pull", "middle back": "Pull", "upper back": "Pull", "forearms": "Pull",
+            "quadriceps": "Legs", "hamstrings": "Legs", "glutes": "Legs", "calves": "Legs", "abductors": "Legs", "adductors": "Legs"
+        };
 
-            // =============== نظام البول (PULL) ===============
-            { name: "Deadlift (رفعة ميتة بالبار)", split: "Pull", equipment: "Barbell", muscle: "ظهر / جلوتس / أمام فخذ", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Barbell-Deadlift.gif", desc: "قف وسط البار، انزل بوركك للوراء، امسك البار، واطلع واقفاً بثقل الركبتين والورك معاً، ظهرك مستقيم." },
-            { name: "Pull-ups (عقلة)", split: "Pull", equipment: "Bodyweight", muscle: "ظهر عرضي / بايسبس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Pull-ups.gif", desc: "امسك البار بقبضة واسعة، اسحب جسمك للأعلى لحد ذقنك يعدى البار، وانزل ببطء." },
-            { name: "Barbell Row (تجديف بالبار)", split: "Pull", equipment: "Barbell", muscle: "ظهر سميك", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Bent-Over-Row.gif", desc: "انحني للأمام بظهر مستقيم، امسك البار، اسحبه لأسفل الصدر، وارجعه للأسفل ببطء." },
-            { name: "Lat Pulldown (سحب أمامي بالكابل)", split: "Pull", equipment: "Machine", muscle: "ظهر عرضي", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Lat-Pulldown.gif", desc: "اجلس على الجهاز، امسك البار بقبضة واسعة، اسحب لأسفل لحد يلمس صدرك العلوي وركز على ضغط ظهرك." },
-            { name: "Seated Cable Row (تجديف بالكابل من جلوس)", split: "Pull", equipment: "Machine", muscle: "ظهر سميك", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Seated-Cable-Rows.gif", desc: "اجلس، ميل للخلف شوية، اسحب المقبض لحد بطنك، وافرد ظهرك للأمام ببطء مع الحفاظ على استقامة الظهر." },
-            { name: "Dumbbell Bicep Curl (بايسبس بالدمبل)", split: "Pull", equipment: "Dumbbell", muscle: "بايسبس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Biceps-Curl.gif", desc: "قف باستقامة، امسك الدمبلز، ارفعهم مع تثبيت الكوع جنب جسمك، ركز على انقباض البايسبس." },
-            { name: "Hammer Curl (مطرقة بالدمبل)", split: "Pull", equipment: "Dumbbell", muscle: "بايسبس / ساعد", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Hammer-Curl.gif", desc: "نفس تمرين البايسبس بس القبضة تكون محايدة (كأنك تمسك مطرقة)، ده بيستهدف الساعد والعضلة العضدية." },
+        let allExercises = [];
 
-            // =============== نظام الليج (LEGS) ===============
-            { name: "Barbell Squat (سكوات بالبار)", split: "Legs", equipment: "Barbell", muscle: "أمام فخذ / جلوتس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Barbell-Back-Squat.gif", desc: "حط البار على الترابيس، نزل ببطء لحد ما فخدك يوازي الأرض، اعكس الحركة واطلع بدون قفل الركبة." },
-            { name: "Leg Press (ضغط أرجل بالجهاز)", split: "Legs", equipment: "Machine", muscle: "أمام فخذ / مؤخرة فخذ", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Leg-Press.gif", desc: "اجلس على الجهاز، حط رجليك على المنصة بعرض الكتف، انزل ببطء لحد ما الركبة تكون 90 درجة، واطلع." },
-            { name: "Romanian Deadlift (رفعة ميتة رومانية)", split: "Legs", equipment: "Barbell", muscle: "مؤخرة فخذ / جلوتس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Romanian-Deadlift.gif", desc: "امسك البار قدام فخدك، انزل بالبار على طول فخدك لتحت الركبة مع دفع الورك للخلف، ظهرك مستقيم." },
-            { name: "Dumbbell Lunges (الطعنة بالدمبل)", split: "Legs", equipment: "Dumbbell", muscle: "أمام فخذ / جلوتس", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Lunges.gif", desc: "قف ممسكاً الدمبلز، خطوة خطوة للأمام، انزل بجسمك لحد ما الركبة الخلفية تقرب من الأرض، وارجع." },
-            { name: "Leg Extensions (تمديد أرجل بالجهاز)", split: "Legs", equipment: "Machine", muscle: "أمام فخذ (Quads)", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Leg-Extensions.gif", desc: "اجلس على الجهاز، حط رجليك تحت الباد، وافرد رجليك بالكامل للأمام مع تثبيت جسمك على الكرسي." },
-            { name: "Lying Leg Curls (ثني أرجل بالجهاز نوم)", split: "Legs", equipment: "Machine", muscle: "مؤخرة فخذ (Hamstrings)", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Lying-Leg-Curls.gif", desc: "نام على الجهاز، حط عقلك تحت الباد، ثني رجليك لحد ما الباد يلمس مؤخرتك، وانزل ببطء." },
-            { name: "Standing Calf Raises (ربلة واقف)", split: "Legs", equipment: "Machine", muscle: "سمانة (Calf)", image: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Standing-Calf-Raises.gif", desc: "قف على الجهاز، انزل بجسمك لتحت لحد آخر مدى للربلة، واطلع بتركيز على انقباض العضلة." }
-        ];
+        async function loadExercises() {
+            try {
+                // سحب قاعدة بيانات التمارين من سيرفر jsDelivr (آمن ومش بيتحجب أبداً)
+                const res = await fetch('https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/dist/exercises.json');
+                const data = await res.json();
+                
+                allExercises = data.map(ex => {
+                    const primaryMuscle = ex.primaryMuscles && ex.primaryMuscles.length > 0 ? ex.primaryMuscles[0] : "";
+                    const split = muscleMap[primaryMuscle] || "Other";
+                    
+                    return {
+                        name: ex.name,
+                        muscle: primaryMuscle,
+                        equipment: ex.equipment,
+                        split: split,
+                        image: ex.images && ex.images.length > 0 ? `https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/${ex.images[0]}` : "",
+                        desc: ex.instructions && ex.instructions.length > 0 ? ex.instructions[0] : "لا يوجد شرح متاح."
+                    };
+                });
+                
+                renderExercises(allExercises);
+            } catch (error) {
+                document.getElementById('exercises-container').innerHTML = `<p class="col-span-full text-center text-red-500 text-xl">حدث خطأ في تحميل البيانات. حاول تحديث الصفحة.</p>`;
+            }
+        }
 
         const container = document.getElementById('exercises-container');
 
@@ -93,40 +105,24 @@
             }
 
             filteredExercises.forEach(ex => {
-                const splitColor = ex.split === 'Push' ? 'bg-blue-900 text-blue-200' : ex.split === 'Pull' ? 'bg-red-900 text-red-200' : 'bg-purple-900 text-purple-200';
-                const eqColor = ex.equipment === 'Barbell' ? 'bg-orange-900 text-orange-200' : ex.equipment === 'Dumbbell' ? 'bg-teal-900 text-teal-200' : ex.equipment === 'Machine' ? 'bg-indigo-900 text-indigo-200' : 'bg-gray-700 text-gray-200';
-
-                // الحل الجذري: 3 سيرفرات بديلة لتخطي الحجب + إجبار HTTPS
-                const originalUrl = ex.image.replace('https://', '');
+                const splitColor = ex.split === 'Push' ? 'bg-blue-900 text-blue-200' : 
+                                   ex.split === 'Pull' ? 'bg-red-900 text-red-200' : 
+                                   ex.split === 'Legs' ? 'bg-purple-900 text-purple-200' : 'bg-gray-700 text-gray-200';
                 
-                // 1. سيرفر ووردبريس (الأقوى مع مواقع التمارين)
-                const proxy1 = `https://i0.wp.com/${originalUrl}`;
-                
-                // 2. سيرفر weserv مع إجبار استخدام ssl (عشان يمشي مع المواقع الآمنة)
-                const proxy2 = `https://images.weserv.nl/?url=ssl:${originalUrl}`;
-                
-                // 3. الرابط المباشر (كحل أخير لو المتصفح مش بيحجب)
-                const proxy3 = ex.image;
-                
-                const fallback = `https://placehold.co/400x300/1f2937/9ca3af?text=No+Image`;
+                const eqColor = ex.equipment === 'barbell' ? 'bg-orange-900 text-orange-200' :
+                                ex.equipment === 'dumbbell' ? 'bg-teal-900 text-teal-200' :
+                                ex.equipment === 'machine' ? 'bg-indigo-900 text-indigo-200' : 'bg-gray-600 text-gray-200';
 
                 const card = `
                     <div class="card-hover bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg">
-                        <div class="img-bg h-60 flex items-center justify-center overflow-hidden relative">
-                            <!-- أيقونة بديلة خلف الصورة لو الصورة بتحمل أو فشلت -->
-                            <span class="absolute text-gray-600 text-6xl">🏋️</span>
-                            <img src="${proxy1}" 
-                                 alt="${ex.name}" 
-                                 class="relative w-full h-full object-cover" 
-                                 loading="lazy"
-                                 data-fallback2="${proxy2}"
-                                 data-fallback3="${proxy3}"
-                                 onerror="handleImgError(this)">
+                        <div class="img-bg h-60 overflow-hidden">
+                            ${ex.image ? `<img src="${ex.image}" alt="${ex.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <span class="text-gray-600 text-6xl absolute hidden">🏋️</span>` : `<span class="text-gray-600 text-6xl">🏋️</span>`}
                         </div>
                         <div class="p-5">
-                            <h3 class="text-xl font-bold text-green-400 mb-2">${ex.name}</h3>
-                            <div class="flex flex-wrap gap-2 mb-3 text-xs">
-                                <span class="px-2 py-1 rounded ${splitColor}">${ex.split}</span>
+                            <h3 class="text-lg font-bold text-green-400 mb-2 capitalize">${ex.name}</h3>
+                            <div class="flex flex-wrap gap-2 mb-3 text-xs capitalize">
+                                ${ex.split !== 'Other' ? `<span class="px-2 py-1 rounded ${splitColor}">${ex.split}</span>` : ''}
                                 <span class="px-2 py-1 rounded ${eqColor}">${ex.equipment}</span>
                                 <span class="px-2 py-1 rounded bg-gray-600 text-gray-200">${ex.muscle}</span>
                             </div>
@@ -138,33 +134,24 @@
             });
         }
 
-        // دالة التعامل مع الصور المكسورة (Multi-tier Fallback)
-        window.handleImgError = function(img) {
-            if (img.dataset.fallback2) {
-                img.src = img.dataset.fallback2;
-                delete img.dataset.fallback2; // مسح الخطوة اللي فشلت
-            } else if (img.dataset.fallback3) {
-                img.src = img.dataset.fallback3;
-                delete img.dataset.fallback3;
-            } else {
-                // لو كل السيرفرات فشلت، نخفي الصورة ونسيب الأيقونة اللي وراها
-                img.style.display = 'none'; 
-            }
-        };
-
         function filterExercises(category, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
 
             if (category === 'All') {
-                renderExercises(exercises);
+                renderExercises(allExercises);
             } else {
-                const filtered = exercises.filter(ex => ex.split === category || ex.equipment === category);
+                // فلترة حسب نظام التدريب أو نوع الجهاز
+                const filtered = allExercises.filter(ex => 
+                    ex.split.toLowerCase() === category.toLowerCase() || 
+                    ex.equipment.toLowerCase() === category.toLowerCase()
+                );
                 renderExercises(filtered);
             }
         }
 
-        renderExercises(exercises);
+        // تشغيل أول مرة
+        loadExercises();
     </script>
 </body>
 </html>
